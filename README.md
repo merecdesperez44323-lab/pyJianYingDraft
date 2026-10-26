@@ -1,5 +1,19 @@
 <!-- PYPI:BEGIN -->
 # pyJianYingDraft
+
+> **This is a fork** of [GuanYixuan/pyJianYingDraft](https://github.com/GuanYixuan/pyJianYingDraft), under the same
+> Apache-2.0 license. Changes from upstream, each tested in `tests/` with invented media:
+>
+> - **New 剪映 opens the drafts it writes.** A draft is saved as `draft_info.json`, the file 剪映 6.0 and later reads;
+>   a `draft_content.json` dropped into the draft folder opens as "草稿内容已损坏". `load_template` reads
+>   `draft_info.json` and falls back to `draft_content.json` for drafts from 剪映 5.9 and earlier. From upstream
+>   [PR #198](https://github.com/GuanYixuan/pyJianYingDraft/pull/198) by NiceCode666, calibrated on 剪映 11.4.0 (macOS).
+> - **`ScriptFile.save(inline_materials=True)`** copies the local audio and video into the draft folder's `materials`
+>   and points the draft at the copies, so 剪映 on macOS can read them wherever they came from. From upstream PR #198.
+> - **Python 3.14.** Class annotations are read with `inspect.get_annotations` (PEP 649). From upstream PR #198.
+>
+> `pymediainfo`'s wheels for macOS, Linux (glibc 2.27 and later) and Windows bundle `libmediainfo`; installing it from
+> its source distribution needs `libmediainfo` on the system.
 ### 轻量、灵活、易上手的Python剪映草稿生成及导出工具，构建全自动视频剪辑/混剪流水线！
 
 > 🧪 本项目的**CapCut版本**正在开发中，欢迎关注[CapCut版本仓库](https://github.com/GuanYixuan/pyCapCut)
