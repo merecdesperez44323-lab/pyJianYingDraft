@@ -1,5 +1,19 @@
 <!-- PYPI:BEGIN -->
 # pyJianYingDraft
+
+> **This is a fork** of [GuanYixuan/pyJianYingDraft](https://github.com/GuanYixuan/pyJianYingDraft), under the same
+> Apache-2.0 license. Changes from upstream, each tested in `tests/` with invented media:
+>
+> - **New 剪映 opens the drafts it writes.** A draft is saved as `draft_info.json`, the file 剪映 6.0 and later reads;
+>   a `draft_content.json` dropped into the draft folder opens as "草稿内容已损坏". `load_template` reads
+>   `draft_info.json` and falls back to `draft_content.json` for drafts from 剪映 5.9 and earlier. From upstream
+>   [PR #198](https://github.com/GuanYixuan/pyJianYingDraft/pull/198) by NiceCode666, calibrated on 剪映 11.4.0 (macOS).
+> - **`ScriptFile.save(inline_materials=True)`** copies the local audio and video into the draft folder's `materials`
+>   and points the draft at the copies, so 剪映 on macOS can read them wherever they came from. From upstream PR #198.
+> - **Python 3.14.** Class annotations are read with `inspect.get_annotations` (PEP 649). From upstream PR #198.
+>
+> `pymediainfo`'s wheels for macOS, Linux (glibc 2.27 and later) and Windows bundle `libmediainfo`; installing it from
+> its source distribution needs `libmediainfo` on the system.
 ### 轻量、灵活、易上手的Python剪映草稿生成及导出工具，构建全自动视频剪辑/混剪流水线！
 
 > 🧪 本项目的**CapCut版本**正在开发中，欢迎关注[CapCut版本仓库](https://github.com/GuanYixuan/pyCapCut)
@@ -72,11 +86,11 @@
 
 
 ### 模板模式
-> ⚠️ 新版剪映中的 `draft_content.json` 往往不是可直接读取的明文 JSON；因此“加载模板”相关能力在新版剪映上通常需要通过 `DraftFolder(..., fallback_loader=...)` 接入额外读取器，详情请参见[此处](https://github.com/GuanYixuan/pyJianYingDraft/releases)
+> ⚠️ 新版剪映的草稿主文件是 `draft_info.json`（6.0 起改名），且内容通常为密文；因此“加载模板”相关能力在新版剪映上通常需要通过 `DraftFolder(..., fallback_loader=...)` 接入额外读取器，详情请参见[此处](https://github.com/GuanYixuan/pyJianYingDraft/releases)
 
 | 功能名称 | 5.9 支持状态 | 新版剪映支持状态 |
 |---|---|---|
-| [加载](#加载模板) `draft_content.json` 文件作为模板 | ✅ | 10.8 🟡<br>需 `fallback_loader` |
+| [加载](#加载模板)草稿主文件作为模板 | ✅ | 11.4.0 🟡<br>需 `fallback_loader` |
 | [替换音视频片段的素材](#根据名称替换素材) | ✅ | 10.8 🟡<br>依赖模板可读 |
 | [修改文本片段的文本内容](#替换文本片段的内容) | ✅ | 10.8 🟡<br>依赖模板可读 |
 | [将模板草稿中的音视频/文本轨道整体导入到另一草稿中](#导入模板草稿中的轨道) | ✅ | 10.8 🟡<br>依赖模板可读 |
@@ -418,7 +432,7 @@ script.add_segment(seg2, "2")
 script.add_segment(seg3, "3")
 
 # 保存草稿
-script.dump("*你的草稿工程文件夹*/draft_content.json")
+script.dump("*你的草稿工程文件夹*/draft_info.json")
 ```
 
 #### 多轨道操作
@@ -492,7 +506,7 @@ video_segment.add_keyframe(KeyframeProperty.alpha, video_segment.duration, 0.0) 
 script.add_segment(video_segment)
 
 # 保存草稿
-script.dump("*你的草稿工程文件夹*/draft_content.json")
+script.dump("*你的草稿工程文件夹*/draft_info.json")
 ```
 
 除了`alpha`外，`KeyframeProperty`中还有平移、旋转、缩放、音量、饱和度等属性，它们都可以设置关键帧。
